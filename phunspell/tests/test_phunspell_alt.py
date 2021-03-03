@@ -50,5 +50,8 @@ class TestPhunspell(unittest.TestCase):
                  "principal"]
         )
 
+    # # exception
+    # # pspell = Phunspell('cs_CZ')
+
 if __name__ == "__main__":
     unittest.main()

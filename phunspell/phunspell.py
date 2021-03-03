@@ -149,10 +149,3 @@ if __name__ == "__main__":
         "This !\"#$%&'()*+, -./:;<=>?@[]^_`{|}~ IS, A lISt? OF words!?, $%^( right here*"
         )
     )
-
-    # pspell = Phunspell("en_US")
-    # mispelled = pspell.lookup_list(
-    #     "python is programing language".split(" ")
-    # )
-    # print(mispelled)
-
