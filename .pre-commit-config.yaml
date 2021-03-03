@@ -1,0 +1,117 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+default_language_version:
+  python: python3.8
+repos:
+  - repo: 'https://github.com/pre-commit/pre-commit-hooks'
+    rev: v3.2.0
+    hooks:
+      - id: check-added-large-files
+        args: ['--maxkb=800']
+      - id: end-of-file-fixer
+      - id: fix-encoding-pragma
+        args: ['--remove']
+      - id: forbid-new-submodules
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+        description: Forces to replace line ending by the UNIX 'lf' character.
+      - id: pretty-format-json
+     #  args: ['--no-sort-keys']
+     #- id: no-commit-to-branch
+     #  args: [--branch, staging]
+      - id: check-ast
+      - id: check-builtin-literals
+      - id: check-byte-order-marker
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-json
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-toml
+      - id: debug-statements
+      - id: mixed-line-ending
+      - id: requirements-txt-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+        files: .*\.(yaml|yml)$
+        exclude: (^apps.yaml|^rio.yml)
+  - repo: 'https://github.com/ambv/black'
+    rev: 20.8b1
+    hooks:
+      - id: black
+        language_version: python3.8
+  - repo: 'https://github.com/pre-commit/mirrors-autopep8'
+    rev: v1.4.4
+    hooks:
+      - id: autopep8
+  - repo: 'https://gitlab.com/pycqa/flake8'
+    rev: 3.7.9
+    hooks:
+      - id: flake8
+        args:
+          - '--max-line-length=79'
+# - repo: https://github.com/asottile/reorder_python_imports
+#   rev: v2.3.6
+#   hooks:
+#     - id: reorder-python-imports
+
+#- repo: https://github.com/pre-commit/mirrors-mypy
+#  rev: v0.790
+#  hooks:
+#  - id: mypy
+#    args: [--ignore-missing-imports]
+#- repo: https://github.com/pre-commit/mirrors-autopep8
+#  rev: v1.4.4
+#  hooks:
+#  - id: autopep8
+#  name: autopep8-default
+#  exclude: .*/tests/.*
+#- repo: https://github.com/pre-commit/mirrors-autopep8
+#  rev: v1.4.4
+#  hooks:
+#  - id: autopep8
+#  name: autopep8-unit-tests
+#  args: ["-i", "--ignore=E226,E24,W50,W690,E402"]
+#- repo: https://github.com/asottile/seed-isort-config
+#  rev: v2.2.0
+#  hooks:
+#  - id: seed-isort-config
+#- repo: https://github.com/pre-commit/mirrors-isort
+#  rev: v5.6.4
+#  hooks:
+#  - id: isort
+#- repo: https://github.com/asottile/pyupgrade
+#  rev: v2.7.3
+#  hooks:
+#  - id: pyupgrade
+#    args: [--py38-plus]
+
+## cant get unitests to work precommit
+#- repo: local
+#  hooks:
+#  - id: unittest
+#    name: unittest
+#    entry: python3 -m unittest discover
+#    language: python
+#    types: [python]
+#    args: [--start-directory=phunspell/tests, --pattern=test_*.py]
+#    additional_dependencies: [--index-url, bs4, datetime, pathlib, quipclient, requests, requests-acadapter, pyuca]
+#    #additional_dependencies: [requests-acadapter]
+#    #additional_dependencies: ['-r', '../requirements.txt']
+#    ##additional_dependencies: [bs4, datetime, pathlib, quipclient, requests, requests-acadapter]
+#    #additional_dependencies: [bs4, datetime, pathlib, quipclient, requests]
+#    verbose: true
+#    always_run: true
+#    pass_filenames: false
+#    verbose: true
+#    stages: [commit, push]
+#- repo: https://github.com/jumanjihouse/pre-commit-hooks
+#  rev: 1.11.0
+#  hooks:
+#  - id: shellcheck
+#  - id: shfmt
+#
+#- repo: git://github.com/detailyang/pre-commit-shell
+#  rev: 1.0.4
+#  hooks:
+#  - id: shell-lint
