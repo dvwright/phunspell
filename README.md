@@ -10,8 +10,6 @@ Just a note giving credit where it's due, [spylls](https://github.com/zverok/spy
 
 ### Usage
 
-Returns misspelled words, case insensitive comparision.
-
     import phunspell
 
     pspell = phunspell.Phunspell('en_US')
