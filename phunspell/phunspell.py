@@ -169,7 +169,9 @@ class Phunspell:
             ValueError,
             PhunspellError,
         ) as error:
-            raise PhunspellError("Dictionary not found {}".format(error))
+            raise PhunspellError(
+                "phunspell, dictionary not found {}".format(error)
+            )
 
     def find_dict_dirpath(self, dictdir, loc_lang):
         # expected 'underscore' format 'en_US'
@@ -190,7 +192,7 @@ class Phunspell:
                     self.dict_path = dictdir
                     self.loc_lang = loc_lang
                     return True
-        raise PhunspellError("Dictionary path not found")
+        raise PhunspellError("phunspell, dictionary path not found")
 
     def dict_dirpath(self, loc_lang):
         try:
@@ -203,7 +205,7 @@ class Phunspell:
             )
             self.find_dict_dirpath(dictdir, loc_lang)
         except ValueError as error:
-            raise PhunspellError("to list failed {}".format(error))
+            raise PhunspellError("phunspell, to list failed {}".format(error))
 
     def to_list(self, sentance):
         """takes string of words and
@@ -224,7 +226,7 @@ class Phunspell:
             )
             return [x.strip() for x in words if len(x)]
         except (FileNotFoundError, TypeError, ValueError) as error:
-            raise PhunspellError("to list failed {}".format(error))
+            raise PhunspellError("phunspell, to list failed {}".format(error))
 
     def lookup(self, word):
         """takes word (string)
@@ -234,7 +236,9 @@ class Phunspell:
         try:
             return self.dictionary.lookup(word.strip())
         except ValueError as error:
-            raise PhunspellError("Dictionary lookup failed {}".format(error))
+            raise PhunspellError(
+                "phunspell, dictionary lookup failed {}".format(error)
+            )
 
     def lookup_list(self, wordlist):
         """takes list of words, returns list words not found
@@ -251,7 +255,7 @@ class Phunspell:
             return flagged
         except ValueError as error:
             raise PhunspellError(
-                "Dictionary lookup_list failed {}".format(error)
+                "phunspell, dictionary lookup_list failed {}".format(error)
             )
 
     def suggest(self, word):
@@ -263,7 +267,9 @@ class Phunspell:
         try:
             return self.dictionary.suggest(word.strip())
         except ValueError as error:
-            raise PhunspellError("Dictionary suggest failed {}".format(error))
+            raise PhunspellError(
+                "phunspell, dictionary suggest failed {}".format(error)
+            )
 
     def languages(self):
         # ['Afrikaans', 'Aragonese'...

@@ -3,3 +3,7 @@ setup.cfg
 setup.py
 phunspell/__init__.py
 phunspell/phunspell.py
+phunspell/data/dictionary/create_test_data.sh
+phunspell/data/dictionary/obtain_dicts.rb
+phunspell/data/dictionary/obtain_dicts.sh
+phunspell/data/dictionary/test_data.txt

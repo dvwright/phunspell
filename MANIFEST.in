@@ -1,0 +1,67 @@
+include LICENSE
+include MANIFEST
+include MANIFEST.in
+include README.md
+include phunspell
+include requirements.txt
+include setup.cfg
+include setup.py
+include phunspell/__init__.py
+include phunspell/data
+include phunspell/phunspell.py
+recursive-include phunspell/data/dictionary/af_ZA *
+recursive-include phunspell/data/dictionary/an_ES *
+recursive-include phunspell/data/dictionary/ar *
+recursive-include phunspell/data/dictionary/be_BY *
+recursive-include phunspell/data/dictionary/bg_BG *
+recursive-include phunspell/data/dictionary/bn_BD *
+recursive-include phunspell/data/dictionary/bo *
+recursive-include phunspell/data/dictionary/br_FR *
+recursive-include phunspell/data/dictionary/bs_BA *
+recursive-include phunspell/data/dictionary/ca *
+recursive-include phunspell/data/dictionary/cs_CZ *
+recursive-include phunspell/data/dictionary/da_DK *
+recursive-include phunspell/data/dictionary/de *
+recursive-include phunspell/data/dictionary/el_GR *
+recursive-include phunspell/data/dictionary/en *
+recursive-include phunspell/data/dictionary/es *
+recursive-include phunspell/data/dictionary/et_EE *
+recursive-include phunspell/data/dictionary/fr_FR *
+recursive-include phunspell/data/dictionary/gd_GB *
+recursive-include phunspell/data/dictionary/gl *
+recursive-include phunspell/data/dictionary/gu_IN *
+recursive-include phunspell/data/dictionary/gug *
+recursive-include phunspell/data/dictionary/he_IL *
+recursive-include phunspell/data/dictionary/hi_IN *
+recursive-include phunspell/data/dictionary/hr_HR *
+recursive-include phunspell/data/dictionary/hu_HU *
+recursive-include phunspell/data/dictionary/id *
+recursive-include phunspell/data/dictionary/is *
+recursive-include phunspell/data/dictionary/it_IT *
+recursive-include phunspell/data/dictionary/kmr_Latn *
+recursive-include phunspell/data/dictionary/ko_KR *
+recursive-include phunspell/data/dictionary/lo_LA *
+recursive-include phunspell/data/dictionary/lt_LT *
+recursive-include phunspell/data/dictionary/lv_LV *
+recursive-include phunspell/data/dictionary/ne_NP *
+recursive-include phunspell/data/dictionary/nl_NL *
+recursive-include phunspell/data/dictionary/no *
+recursive-include phunspell/data/dictionary/oc_FR *
+recursive-include phunspell/data/dictionary/pl_PL *
+recursive-include phunspell/data/dictionary/pt_BR *
+recursive-include phunspell/data/dictionary/pt_PT *
+recursive-include phunspell/data/dictionary/ro *
+recursive-include phunspell/data/dictionary/ru_RU *
+recursive-include phunspell/data/dictionary/si_LK *
+recursive-include phunspell/data/dictionary/sk_SK *
+recursive-include phunspell/data/dictionary/sl_SI *
+recursive-include phunspell/data/dictionary/sq_AL *
+recursive-include phunspell/data/dictionary/sr *
+recursive-include phunspell/data/dictionary/sv_SE *
+recursive-include phunspell/data/dictionary/sw_TZ *
+recursive-include phunspell/data/dictionary/te_IN *
+recursive-include phunspell/data/dictionary/th_TH *
+recursive-include phunspell/data/dictionary/tr_TR *
+recursive-include phunspell/data/dictionary/uk_UA *
+recursive-include phunspell/data/dictionary/vi *
+recursive-include phunspell/data/dictionary/zu_ZA *
