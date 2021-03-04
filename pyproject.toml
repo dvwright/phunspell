@@ -1,0 +1,35 @@
+[tool.autopep8]
+max_line_length = 79
+
+# how to add flake8 here?
+# [flake8]
+# max-line-length = 79
+# max-complexity = 18
+# # select = B,C,E,F,W,T4,B9
+# ignore = E203, E266, E501, W503, F403, F401
+
+[tool.black]
+line-length = 79
+skip-string-normalization = true
+target-version = ['py38']
+include = '\.py?$'
+exclude = '''
+
+(
+  /(
+      \.eggs         # exclude a few common directories in the
+    | \.git          # root of the project
+    | \.hg
+    | \.mypy_cache
+    | \.tox
+    | \.venv
+    | _build
+    | buck-out
+    | build
+    | dist
+    | phunspell\/data
+  )/
+  | foo.py           # also separately exclude a file named foo.py in
+                     # the root of the project
+)
+'''
