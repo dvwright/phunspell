@@ -11,7 +11,7 @@ setup(
     author_email='dvwright@cpan.org',
     url='https://github.com/dvwright/phunspell',
     download_url='https://github.com/dvwright/phunspell/archive/v0.1.0.tar.gz',
-    keywords=['Hunspell', 'Python'],
+    keywords=['Spelling', 'Hunspell', 'Spylls', 'Python'],
     # install_requires=[],
     classifiers=[
         'Development Status :: 4 - Beta',
