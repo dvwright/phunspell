@@ -1,0 +1,10 @@
+README.md
+pyproject.toml
+setup.cfg
+setup.py
+phunspell/__init__.py
+phunspell/phunspell.py
+phunspell.egg-info/PKG-INFO
+phunspell.egg-info/SOURCES.txt
+phunspell.egg-info/dependency_links.txt
+phunspell.egg-info/top_level.txt

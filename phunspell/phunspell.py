@@ -40,10 +40,9 @@ import os
 import string
 from spylls.hunspell import Dictionary
 
-# dont let black refromat this
-# fmt: off
+# fmt: off ### doesn't work!!! black still formatted this - bad...
 DICTIONARIES = {
-    # lang loc      # dir        # language name
+    # lang-loc # dir   # language
     "af_ZA": ["af_ZA", "Afrikaans"],
     "an_ES": ["an_ES", "Aragonese"],
     "ar": ["ar", "Arabic"],
@@ -157,8 +156,7 @@ class Phunspell:
         """
         try:
             self.dict_dirpath(loc_lang)
-
-            print(self.dict_path)
+            # print(self.dict_path)
 
             # use local dictionaries only
             self.dictionary = Dictionary.from_files(self.dict_path)
@@ -166,6 +164,7 @@ class Phunspell:
             # self.dictionary = Dictionary.from_files(loc_lang)
         except (
             FileNotFoundError,
+            KeyError,
             TypeError,
             ValueError,
             PhunspellError,
@@ -202,7 +201,7 @@ class Phunspell:
                 "dictionary",
                 DICTIONARIES[loc_lang.strip()][0],
             )
-            self.find_dict_dirpath(self, dictdir, loc_lang)
+            self.find_dict_dirpath(dictdir, loc_lang)
         except ValueError as error:
             raise PhunspellError("to list failed {}".format(error))
 
@@ -266,18 +265,18 @@ class Phunspell:
         except ValueError as error:
             raise PhunspellError("Dictionary suggest failed {}".format(error))
 
+    def languages(self):
+        # ['Afrikaans', 'Aragonese'...
+        return [x[1] for x in DICTIONARIES.values()]
+
     def dictionaries(self):
-        try:
-            languages = []
-            for lang in DICTIONARIES:
-                languages.append(lang.values[1])
-            return languages
-        except ValueError as error:
-            raise PhunspellError("Dictionary not found {}".format(error))
+        # ['af_ZA', 'an_ES', 'ar'...
+        return [x for x in DICTIONARIES.keys()]
 
 
 if __name__ == "__main__":
     pspell = Phunspell('en_US')
+    # pspell = Phunspell('af_ZA')
 
     print(pspell.lookup("phunspell"))  # False
     print(pspell.lookup("about"))  # True
@@ -304,4 +303,5 @@ if __name__ == "__main__":
         )
     )
 
-    print(pspell.dictionaries)
+    print(pspell.languages())
+    print(pspell.dictionaries())
