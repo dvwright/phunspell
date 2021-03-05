@@ -1,12 +1,12 @@
 Metadata-Version: 2.1
 Name: phunspell
-Version: 0.1.1
+Version: 0.1.2
 Summary: Pure Python spell checker, utilizing Spylls a port of Hunspell
 Home-page: https://github.com/dvwright/phunspell
 Author: David Wright
 Author-email: dvwright@cpan.org
 License: MIT
-Download-URL: https://github.com/dvwright/phunspell/archive/v0.1.1.tar.gz
+Download-URL: https://github.com/dvwright/phunspell/archive/v0.1.2.tar.gz
 Description: # Phunspell
 
         A pure Python spell checker utilizing [spylls](https://github.com/zverok/spylls) a port of [Hunspell](https://hunspell.github.io/).
