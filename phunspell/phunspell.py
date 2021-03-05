@@ -24,7 +24,7 @@
 
     import phunspell
 
-    pspell = phunspell.Phunspell('en_US')
+    pspell = phunspell.Phunspell("en_US")
 
     print(pspell.lookup("phunspell")) # False
     print(pspell.lookup("about")) # True
@@ -32,7 +32,7 @@
     mispelled = pspell.lookup_list("Bill's TV is borken".split(" "))
     print(mispelled) # ["bill", "tv", "borken"]
 
-    pspell = phunspell.Phunspell('cs_CZ')
+    pspell = phunspell.Phunspell("cs_CZ")
 
 """
 
@@ -40,7 +40,6 @@ import os
 import string
 from spylls.hunspell import Dictionary
 
-# fmt: off ### doesn't work!!! black still formatted this - bad...
 DICTIONARIES = {
     # lang-loc # dir   # language
     "af_ZA": ["af_ZA", "Afrikaans"],
@@ -136,7 +135,6 @@ DICTIONARIES = {
     "vi_VN": ["vi", "Vietnamese"],
     # "hyph_zu_ZA" : ["zu_ZA",    "LANG"],
 }
-# fmt: on
 
 
 class PhunspellError(Exception):
@@ -150,7 +148,7 @@ class Phunspell:
     def __init__(self, loc_lang):
         """Load passed dictionary (loc_lang) on init
         dictionary must be of the form Locale_Langage
-        e.g. 'en_US'
+        e.g. "en_US"
 
         See README for all supported languages
         """
@@ -174,17 +172,17 @@ class Phunspell:
             )
 
     def find_dict_dirpath(self, dictdir, loc_lang):
-        # expected 'underscore' format 'en_US'
+        # expected "underscore" format "en_US"
         if os.path.isdir(dictdir):
             aff_file = os.path.join(dictdir, "{}.aff".format(loc_lang))
-            # expected 'underscore' format 'en_US.aff'
+            # expected "underscore" format "en_US.aff"
             if os.path.exists(aff_file):
                 self.dict_path = os.path.join(dictdir, loc_lang)
                 self.loc_lang = loc_lang
                 return True
             else:
-                # underscore format ('en_US') not found
-                # fallback try lang dir 'en'
+                # underscore format ("en_US") not found
+                # fallback try lang dir "en"
                 loc_lang = loc_lang[0:2]
                 dictdir = os.path.join(dictdir, loc_lang)
                 aff_file = os.path.join(dictdir, "{}.aff".format(loc_lang))
@@ -225,6 +223,7 @@ class Phunspell:
                 .split(" ")
             )
             return [x.strip() for x in words if len(x)]
+            # return list(filter(None, [x.strip() for x in flagged if len(x)]))
         except (FileNotFoundError, TypeError, ValueError) as error:
             raise PhunspellError("phunspell, to list failed {}".format(error))
 
@@ -244,13 +243,13 @@ class Phunspell:
         """takes list of words, returns list words not found
         in dictionary
 
-        In: ['word', 'another', 'more', 'programming']
-        Out: ['programing']
+        In: ["word", "another", "more", "programming"]
+        Out: ["programing"]
         """
         try:
             flagged = []
             for word in wordlist:
-                if not self.dictionary.lookup(word):
+                if not self.dictionary.lookup(word.strip()):
                     flagged.append(word)
             return flagged
         except ValueError as error:
@@ -272,17 +271,21 @@ class Phunspell:
             )
 
     def languages(self):
-        # ['Afrikaans', 'Aragonese'...
+        # ["Afrikaans", "Aragonese"...
         return [x[1] for x in DICTIONARIES.values()]
 
     def dictionaries(self):
-        # ['af_ZA', 'an_ES', 'ar'...
+        # ["af_ZA", "an_ES", "ar"...
         return [x for x in DICTIONARIES.keys()]
 
 
 if __name__ == "__main__":
-    pspell = Phunspell('en_US')
-    # pspell = Phunspell('af_ZA')
+    pspell = Phunspell("en_US")
+    print(pspell.lookup_list("Wonder Woman 1984"))
+    print(pspell.lookup_list(pspell.to_list("Wonder Woman 1984")))
+
+    pspell = Phunspell("en_US")
+    # pspell = Phunspell("af_ZA")
 
     print(pspell.lookup("phunspell"))  # False
     print(pspell.lookup("about"))  # True
@@ -290,7 +293,7 @@ if __name__ == "__main__":
     mispelled = pspell.lookup_list("Bill's TV is borken".split(" "))
     print(mispelled)  # ["borken"]
 
-    for suggestion in pspell.suggest('phunspell'):
+    for suggestion in pspell.suggest("phunspell"):
         print(suggestion)
         # Hunspell
         # spellbound
@@ -300,9 +303,9 @@ if __name__ == "__main__":
         # principal
 
     # exception
-    # pspell = Phunspell('cs_CZ')
+    # pspell = Phunspell("cs_CZ")
 
-    # ['this', 'is', 'a', 'list', 'of', 'words', 'right', 'here']
+    # ["this", "is", "a", "list", "of", "words", "right", "here"]
     print(
         pspell.to_list(
             "This !\"#$%&'()*+, -./:;<=>?@[]^_`{|}~ IS, A lISt? OF words!?, $%^( right here*"

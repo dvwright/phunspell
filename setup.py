@@ -6,16 +6,15 @@ with open("README.md", "r") as fh:
 
 setup(
     name='phunspell',
-    version='0.1.1',
+    version='0.1.2',
     url='https://github.com/dvwright/phunspell',
-    download_url='https://github.com/dvwright/phunspell/archive/v0.1.1.tar.gz',
+    download_url='https://github.com/dvwright/phunspell/archive/v0.1.2.tar.gz',
     license='MIT',
     description='Pure Python spell checker, utilizing Spylls a port of Hunspell',
     long_description=long_description,
     long_description_content_type="text/markdown",
     author='David Wright',
     author_email='dvwright@cpan.org',
-    # package_data={'phunspell': ['data/dictionary/*.*']},
     include_package_data=True,
     packages=find_packages(
         exclude=[
