@@ -6,9 +6,9 @@ with open("README.md", "r") as fh:
 
 setup(
     name='phunspell',
-    version='0.1.2',
+    version='0.1.3',
     url='https://github.com/dvwright/phunspell',
-    download_url='https://github.com/dvwright/phunspell/archive/v0.1.2.tar.gz',
+    download_url='https://github.com/dvwright/phunspell/archive/v0.1.3.tar.gz',
     license='MIT',
     description='Pure Python spell checker, utilizing Spylls a port of Hunspell',
     long_description=long_description,
