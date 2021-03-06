@@ -20,6 +20,18 @@ class TestUkUA(unittest.TestCase):
             self.pspell.lookup_list(words.split(" ")), ["borken"]
         )
 
+    def test_to_list(self):
+        words = "!\"#$%&'()*+, -./:;<=>?@[]^_`{|}~ бас-гітара бас-кларнет безособово-предикативний безумовно-рефлекторний $%^(*"  # noqa E501
+        self.assertListEqual(
+            self.pspell.to_list(words),
+            [
+                "бас-гітара",
+                "бас-кларнет",
+                "безособово-предикативний",
+                "безумовно-рефлекторний",
+            ],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

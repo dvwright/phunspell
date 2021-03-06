@@ -146,7 +146,7 @@ cd ../es && \
   curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/es/es_VE.aff > es_VE.aff \
   && sleep 2 && \
   curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/es/es_VE.dic > es_VE.dic
-  
+
 # fr_FR
 cd ../fr_FR && \
   curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/fr_FR/fr.aff > fr.aff \
@@ -158,13 +158,13 @@ cd ../gl && \
   curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/gl/gl_ES.aff > gl_ES.aff \
   && sleep 2 && \
   curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/gl/gl_ES.dic > gl_ES.dic
- 
+
 # id
 cd ../id && \
   curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/id/id_ID.aff > id_ID.aff \
   && sleep 2 && \
   curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/id/id_ID.dic > id_ID.dic
- 
+
 # lt_LT
 # XXX TODO
 cd ../lt_LT && \
@@ -180,7 +180,7 @@ cd ../no && \
   && sleep 2 && \
   curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/no/nn_NO.aff > nn_NO.aff \
   && sleep 2 && \
-  curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/no/nn_NO.aff > nn_NO.aff
+  curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/no/nn_NO.dic > nn_NO.dic
 
 # ro
 cd ../ro && \
@@ -197,7 +197,7 @@ cd ../sr && \
   curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/sr/sr.aff > sr.aff \
   && sleep 2 && \
   curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/sr/sr.dic > sr.dic
- 
+
 # sv_SE
 cd ../sv_SE && \
   curl https://raw.githubusercontent.com/LibreOffice/dictionaries/master/sv_SE/sv_FI.aff > sv_FI.aff \

@@ -40,7 +40,9 @@ Breton                       | br_FR
 Catalan	                     | ca_ES
 Czech                        | cs_CZ
 Danish                       | da_DK
-German                       | de (de_AT,de_CH,de_DE)
+German                       | de_AT
+German                       | de_CH
+German                       | de_DE
 Greek                        | el_GR
 English (Australian)         | en_AU
 English (Canada)             | en_CA
@@ -48,6 +50,29 @@ English (Great Britain)	     | en_GB
 English (US)                 | en_US
 English (South African)	     | en_ZA
 Spanish	(all variants)       | es
+Spanish                      | es_AR
+Spanish                      | es_BO
+Spanish                      | es_CL
+Spanish                      | es_CO
+Spanish                      | es_CR
+Spanish                      | es_CU
+Spanish                      | es_DO
+Spanish                      | es_EC
+Spanish                      | es_ES
+Spanish                      | es_GQ
+Spanish                      | es_GT
+Spanish                      | es_HN
+Spanish                      | es_MX
+Spanish                      | es_NI
+Spanish                      | es_PA
+Spanish                      | es_PE
+Spanish                      | es_PH
+Spanish                      | es_PR
+Spanish                      | es_PY
+Spanish                      | es_SV
+Spanish                      | es_US
+Spanish                      | es_UY
+Spanish                      | es_VE
 Estonian                     | et_EE
 French                       | fr_FR
 Scottish Gaelic              | gd_GB
@@ -63,25 +88,27 @@ Italian	                     | it_IT
 Kurdish (Turkey)	         | ku_TR
 Lithuanian	                 | lt_LT
 Latvian	                     | lv_LV
-Mapudüngun	                 | md (arn)
+Mapudüngun	                 | md (arn) (*TODO*)
 Netherlands	                 | nl_NL
-Norwegian	                 | no
+Norwegian	                 | nb_NO
+Norwegian	                 | nn_NO
 Occitan	                     | oc_FR
 Polish	                     | pl_PL
 Brazilian Portuguese	     | pt_BR
 Portuguese	                 | pt_PT
-Romanian	                 | ro
+Romanian	                 | ro_RO
 Sinhala	                     | si_LK
 Slovak	                     | sk_SK
 Slovenian	                 | sl_SI
-Serbian (Cyrillic and Latin) | sr
+Serbian (Cyrillic)           | sr
+Serbian (Latin)              | sr-Latn
 Swedish	                     | sv_SE
 Swahili	                     | sw_TZ
-Tamil	                     | Ta
+Tamil	                     | Ta (*TODO*)
 Thai	                     | th_TH
 Turkish	                     | tr_TR
 Ukrainian	                 | uk_UA
-Vietnamese	                 | vi
+Vietnamese	                 | vi_VN
 
 #### Tests
 ```

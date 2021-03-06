@@ -20,6 +20,44 @@ class TestSkSK(unittest.TestCase):
             self.pspell.lookup_list(words.split(" ")), ["borken"]
         )
 
+    def test_to_list(self):
+        words = "!\"#$%&'()*+, -./:;<=>?@[]^_`{|}~ Alma-ata bielo-červený bielo-čierny cyrilo-metodovský červeno-biely Česko-slovensko, $%^(*"  # noqa E501
+        self.assertListEqual(
+            self.pspell.to_list(words),
+            [
+                "alma-ata",
+                "bielo-červený",
+                "bielo-čierny",
+                "cyrilo-metodovský",
+                "červeno-biely",
+                "česko-slovensko",
+            ],
+        )
+
+        self.assertListEqual(
+            self.pspell.to_list(words, lcase=False),
+            [
+                "Alma-ata",
+                "bielo-červený",
+                "bielo-čierny",
+                "cyrilo-metodovský",
+                "červeno-biely",
+                "Česko-slovensko",
+            ],
+        )
+
+        self.assertListEqual(
+            self.pspell.to_list(words, lcase=False, filter_all=True),
+            [
+                "Almaata",
+                "bieločervený",
+                "bieločierny",
+                "cyrilometodovský",
+                "červenobiely",
+                "Československo",
+            ],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -18,6 +18,13 @@ class TestNeNP(unittest.TestCase):
             self.pspell.lookup_list(words.split(" ")), ["borken"]
         )
 
+    def test_to_list(self):
+        words = "!\"#$%&'()*+, -./:;<=>?@[]^_`{|}~ बछेडा-बछेडी सह-सेनानी हास्य-व्यङ्ग्य $%^(*"
+        self.assertListEqual(
+            self.pspell.to_list(words),
+            ["बछेडा-बछेडी", "सह-सेनानी", "हास्य-व्यङ्ग्य"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

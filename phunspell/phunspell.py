@@ -205,10 +205,15 @@ class Phunspell:
         except ValueError as error:
             raise PhunspellError("phunspell, to list failed {}".format(error))
 
-    def to_list(self, sentance):
+    def to_list(self, sentance, lcase=True, filter_all=False):
         """takes string of words and
         splits it into list removing punctuation
         returns list of words
+
+        args: lcase : convert all chars to lower case (the default)
+              filter_all : strip all punctuation (set True)
+                           strips all punctuation except hyphen and dash ['-]
+                           (set False) [the default]
 
         string.punctuation => !"#$%&'()*+, -./:;<=>?@[]^_`{|}~
 
@@ -217,13 +222,19 @@ class Phunspell:
         TODO: punctuation in other languages
         """
         try:
-            words = (
-                sentance.lower()
-                .translate(str.maketrans('', '', string.punctuation))
-                .split(" ")
-            )
-            return [x.strip() for x in words if len(x)]
-            # return list(filter(None, [x.strip() for x in flagged if len(x)]))
+            if lcase:
+                sentance = sentance.lower()
+
+            # allow hyphen and dash ['-]
+            punctuation = r"""!"#$%&()*+,./:;<=>?@[\]^_`{|}~"""
+
+            if filter_all:
+                punctuation = string.punctuation
+
+            words = sentance.translate(
+                str.maketrans('', '', punctuation)
+            ).split(" ")
+            return [x.strip() for x in words if len(x) and x not in ["'", '-']]
         except (FileNotFoundError, TypeError, ValueError) as error:
             raise PhunspellError("phunspell, to list failed {}".format(error))
 
