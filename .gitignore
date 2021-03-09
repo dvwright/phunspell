@@ -9,3 +9,4 @@ dist/
 *.egg-info/
 *.egg
 venv
+phunspell/pickled_data/*

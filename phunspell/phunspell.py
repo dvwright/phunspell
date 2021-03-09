@@ -38,7 +38,13 @@
 
 import os
 import string
+import pickle
+import tempfile
+import logging
+import functools
 from spylls.hunspell import Dictionary
+
+TEMPDIR = tempfile.gettempdir()
 
 DICTIONARIES = {
     # lang-loc # dir   # language
@@ -136,7 +142,6 @@ DICTIONARIES = {
     # "hyph_zu_ZA" : ["zu_ZA",    "LANG"],
 }
 
-
 class PhunspellError(Exception):
     def __init__(self, message):
         Exception.__init__(self, "%s" % (message))
@@ -145,21 +150,32 @@ class PhunspellError(Exception):
 class Phunspell:
     """pure Python spell checker, utilizing Spylls a port of Hunspell"""
 
-    def __init__(self, loc_lang):
+    def __init__(self, loc_lang="en_US", loc_list=[], load_all=False):
         """Load passed dictionary (loc_lang) on init
         dictionary must be of the form Locale_Langage
         e.g. "en_US"
 
+        params:
+            loc_list : ["en_US", "de_AT", "de_DE", "el_GR", etc]
+            load_all : Load all supported dictionaries on load True/False
+
         See README for all supported languages
         """
         try:
-            self.dict_dirpath(loc_lang)
-            # print(self.dict_path)
+            if load_all:
+                self.dictionary_loader(self.dictionaries_all())
+            elif len(loc_list) > 0:
+                # if locales passed, load specified dictionaries on init
+                self.dictionary_loader(loc_list)
+            else:
+                # just load single loc dictionary on init
+                self.dict_dirpath(loc_lang)
 
-            # use local dictionaries only
-            self.dictionary = Dictionary.from_files(self.dict_path)
-            # pass directly to spylls (could do for en_US)
-            # self.dictionary = Dictionary.from_files(loc_lang)
+                # use local dictionaries only
+                self.dictionary = Dictionary.from_files(self.dict_path)
+
+                # pass directly to spylls (could do for en_US)
+                # self.dictionary = Dictionary.from_files(loc_lang)
         except (
             FileNotFoundError,
             KeyError,
@@ -171,11 +187,87 @@ class Phunspell:
                 "phunspell, dictionary not found {}".format(error)
             )
 
+    def dictionaries_all(self):
+        """Load 'all' dictionaries"""
+        return [n for n in DICTIONARIES.keys() if n.find('_') != -1]
+
+    @functools.lru_cache  # memoize
+    def dictionary_load(self, loc):
+        """load stored dictionary object for locale"""
+        try:
+            datadir = os.getenv("PICKLED_DATADIR")
+            if datadir:
+                filepath = os.path.join(datadir, loc)
+            else:
+                filepath = os.path.join(TEMPDIR, loc)
+
+            logging.debug(f'Load dictionary from directory {filepath}')
+
+            pfile = open(filepath, 'rb')
+            stored_dic = pickle.load(pfile)
+            # self.dictionary = Dictionary.from_files(stored_dic)
+            self.dictionary = stored_dic
+            pfile.close()
+
+            logging.debug(f'Loaded dictionary from directory {filepath}')
+        except (TypeError, OSError) as error:
+            raise PhunspellError(f'Cannot load dictionary: {filepath} {error}')
+
+    def dictionary_store(self, loc):
+        """iterate locale dump dictionary to object
+        pickle the dictionary
+
+        Can specify an Environement varible to
+        local dir to save/load pickled data to
+
+        linux/mac osx:
+        $ export PICKLED_DATADIR="/home/dwright/python/phunspell/pickled_data/"
+        """
+        try:
+            datadir = os.getenv("PICKLED_DATADIR")
+            if datadir:
+                filepath = os.path.join(datadir, loc)
+            else:
+                filepath = os.path.join(TEMPDIR, loc)
+
+            logging.debug(f'Store dictionary to directory {filepath}')
+            # if os.path.exists(filepath):
+            self.dict_dirpath(loc)
+            pfile = open(filepath, 'wb')
+            data = Dictionary.from_files(self.dict_path)
+            pickle.dump(data, pfile)
+            pfile.close()
+            # else:
+            #   raise PhunspellError(f'Cant create dictionay path {filepath}')
+        except (TypeError, OSError) as error:
+            raise PhunspellError(f'Cannot write file: {filepath} {error}')
+
+    def dictionary_loader(self, loc_list):
+        """iterate locale list load dictionary for locale
+
+        meant to load dictionaries on init, not return them
+        from this call
+        """
+        for loc in loc_list:
+            # XXX skip for now
+            # re.error: bad character range ű-ø at position 12
+            if loc in ["hu_HU"]:
+                continue
+
+            self.dictionary_store(loc)
+            # self.dictionary_load(loc)
+
     def find_dict_dirpath(self, dictdir, loc_lang):
-        # expected "underscore" format "en_US"
+        """find directory for dictionary `loc_lang`
+
+        if found sets:
+            self.dict_path = dictionary directory
+            self.loc_lang = language locale
+        """
+        # expecting "underscore" format. e.g. "en_US"
         if os.path.isdir(dictdir):
             aff_file = os.path.join(dictdir, "{}.aff".format(loc_lang))
-            # expected "underscore" format "en_US.aff"
+            # expecting "underscore" format. e.g. "en_US.aff"
             if os.path.exists(aff_file):
                 self.dict_path = os.path.join(dictdir, loc_lang)
                 self.loc_lang = loc_lang
@@ -193,6 +285,7 @@ class Phunspell:
         raise PhunspellError("phunspell, dictionary path not found")
 
     def dict_dirpath(self, loc_lang):
+        """find directory to dictionary for locale"""
         try:
             dirpath = os.path.dirname(os.path.realpath(__file__))
             dictdir = os.path.join(
@@ -238,19 +331,22 @@ class Phunspell:
         except (FileNotFoundError, TypeError, ValueError) as error:
             raise PhunspellError("phunspell, to list failed {}".format(error))
 
-    def lookup(self, word):
+    def lookup(self, word, locs=[]):
         """takes word (string)
         removes beginning and trailing whitespace
         returns true if found in dictionary, false otherwise
         """
         try:
+            if len(locs) > 0:
+                self.dictionary_load(locs)
+
             return self.dictionary.lookup(word.strip())
         except ValueError as error:
             raise PhunspellError(
                 "phunspell, dictionary lookup failed {}".format(error)
             )
 
-    def lookup_list(self, wordlist):
+    def lookup_list(self, wordlist, locs=[]):
         """takes list of words, returns list words not found
         in dictionary
 
@@ -258,6 +354,9 @@ class Phunspell:
         Out: ["programing"]
         """
         try:
+            if len(locs) > 0:
+                self.dictionary_load(locs)
+
             flagged = []
             for word in wordlist:
                 if not self.dictionary.lookup(word.strip()):
@@ -268,13 +367,16 @@ class Phunspell:
                 "phunspell, dictionary lookup_list failed {}".format(error)
             )
 
-    def suggest(self, word):
+    def suggest(self, word, locs=[]):
         """takes word (string)
         removes beginning and trailing whitespace
         returns suggested spelling if not found in dictionary
         returns nothing if found in dictionary
         """
         try:
+            if len(locs) > 0:
+                self.dictionary_load(locs)
+
             return self.dictionary.suggest(word.strip())
         except ValueError as error:
             raise PhunspellError(
@@ -291,11 +393,16 @@ class Phunspell:
 
 
 if __name__ == "__main__":
-    pspell = Phunspell("en_US")
+    # create pickled dictionaries for all dictionaries
+    # pspell = Phunspell(loc_lang="en_US", load_all=True)
+    # import sys
+    # sys.exit()
+
+    pspell = Phunspell(loc_lang="en_US")
     print(pspell.lookup_list("Wonder Woman 1984"))
     print(pspell.lookup_list(pspell.to_list("Wonder Woman 1984")))
 
-    pspell = Phunspell("en_US")
+    pspell = Phunspell() # default "en_US"
     # pspell = Phunspell("af_ZA")
 
     print(pspell.lookup("phunspell"))  # False

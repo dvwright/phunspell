@@ -24,7 +24,7 @@ Just a note giving credit where it's due, [spylls](https://github.com/zverok/spy
 
 ### Installation
 
-```
+```shell
 pip install phunspell
 ```
 
@@ -111,9 +111,66 @@ Ukrainian	                 | uk_UA
 Vietnamese	                 | vi_VN
 
 #### Tests
-```
+```shell
 python -m unittest discover -s phunspell/tests -p "test_*.py"
 ```
+
+#### Experimental
+
+There is an option to build/store all the dictionaries as pickled data. Since there are security risks associated with pickled data we will not include that data in the distrubution.
+
+To create your own local pickled dictionaries set an env variable.
+
+linux/mac osx:
+```shell
+$ export PICKLED_DATADIR="/home/dwright/python/phunspell/pickled_data/"
+```
+
+enter a python shell:
+```python
+$ python
+>>> Phunspell(loc_lang="en_US", load_all=True)
+```
+
+*NOTE: this will consume a lot of resources!*
+
+Once completed you should have a picked object for every dictionary supported by this lib.
+
+```shell
+$ ls /home/dwright/python/phunspell/pickled_data/
+af_ZA
+an_ES
+be_BY
+bg_BG
+bn_BD
+br_FR
+bs_BA
+cs_CZ
+da_DK
+de_AT
+de_CH
+...
+...
+...
+```
+
+*NOTE: will take up almost 2 GB of space*
+
+```shell
+$ du -sh .
+1.4G
+```
+
+As long as you keep that environmental variable set for all future runs just use the library as:
+
+```python
+pspell = Phunspell()
+```
+
+*NOTE: If you ever update dictionary data, you will need to create a new pickle store for it.*
+
+and it should find the dictionaries and load them quickly
+
 
 #### Misc
 `python`, `python3`, `hunspell`, `libreoffice`, `spell`, `spell checking`
