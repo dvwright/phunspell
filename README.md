@@ -117,22 +117,44 @@ python -m unittest discover -s phunspell/tests -p "test_*.py"
 
 #### Experimental
 
+```python
+
+    # Extended Optional:
+
+    # First time usage:
+    # create a directory of dictionaries stored as object
+    # makes loading/access much faster
+
+    storage_path = "/home/dvwright/data/phunspell/dictionary_objects"
+    # run once only:
+    pspell_object_create = PhunspellObjectStore(path=storage_path)
+
+
+    # Then, typical usage:
+    pspell = Phunspell(object_storage=storage_path)
+
+    dicts_words = {
+        "an_ES": "vengar",
+        "be_BY": "ідалапаклонніцкі",
+        "bg_BG": "удържехме",
+    }
+
+    for loc in dicts_words.keys():
+        print(pspell.lookup(dicts_words[loc], locs=loc))
+```
+
 There is an option to build/store all the dictionaries as pickled data. Since there are security risks associated with pickled data we will not include that data in the distrubution.
 
-To create your own local pickled dictionaries set an env variable.
-
-linux/mac osx:
-```shell
-$ export PICKLED_DATADIR="/home/dwright/python/phunspell/pickled_data/"
-```
+To create your own local pickled dictionaries:
 
 enter a python shell:
 ```python
 $ python
->>> Phunspell(loc_lang="en_US", load_all=True)
+storage_path = "/home/dvwright/data/phunspell/dictionary_objects"
+pspell = PhunspellObjectStore(path=storage_path)
 ```
 
-*NOTE: this will consume a lot of resources!*
+*NOTE: You only have to do this once before using the library and it's optional (this will consume a lot of resources!)*
 
 Once completed you should have a picked object for every dictionary supported by this lib.
 
@@ -161,10 +183,11 @@ $ du -sh .
 1.4G
 ```
 
-As long as you keep that environmental variable set for all future runs just use the library as:
+For all future uses of the library just pass the directory as an argument.
 
 ```python
-pspell = Phunspell()
+storage_path = "/home/dvwright/data/phunspell/dictionary_objects"
+pspell = Phunspell(object_storage=storage_path)
 
 # load the specific locale on lookups
 pspell.lookup_list(['us-word1', 'us-word2'], locs='en_US')

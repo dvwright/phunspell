@@ -33,7 +33,6 @@
     print(mispelled) # ["bill", "tv", "borken"]
 
     pspell = phunspell.Phunspell("cs_CZ")
-
 """
 
 import os
@@ -151,26 +150,52 @@ class PhunspellError(Exception):
         Exception.__init__(self, "%s" % (message))
 
 
+class PhunspellObjectStore:
+    """Create local object stores of all dictionaries
+    meant to only be run once.
+
+    NOTE: Will need to be rerun anytime a dictionary is updated
+    """
+
+    def __init__(self, path):
+        """NOTE: meant to be run once to
+        create/store local pickled dictionary objects
+        """
+        try:
+            pspell = Phunspell(object_storage=path)
+            pspell.dictionary_loader(pspell.dictionaries_all())
+        except (
+            FileNotFoundError,
+            KeyError,
+            TypeError,
+            ValueError,
+            PhunspellError,
+        ) as error:
+            raise PhunspellError(
+                "phunspell object store, dictionary not found {}".format(error)
+            )
+
+
 class Phunspell:
     """pure Python spell checker, utilizing Spylls a port of Hunspell"""
 
-    def __init__(self, loc_lang="en_US", loc_list=[], load_all=False):
+    def __init__(self, loc_lang="en_US", loc_list=[], object_storage=None):
         """Load passed dictionary (loc_lang) on init
         dictionary must be of the form Locale_Langage
         e.g. "en_US"
 
+        Can specify a local directory path to dictionary objects
+
         params:
             loc_list : ["en_US", "de_AT", "de_DE", "el_GR", etc]
-            load_all : Load all supported dictionaries on load True/False
+            object_storage : "/home/dwright/python/phunspell/pickled_data/"
 
         See README for all supported languages
         """
         try:
-            if load_all:
-                # NOTE: meant to be run once to create/store local pickled dictionary
-                # objects
-                self.dictionary_loader(self.dictionaries_all())
-            elif len(loc_list) > 0:
+            self.object_storage = object_storage
+
+            if len(loc_list) > 0:
                 # if locales passed, load specified dictionaries on init
                 self.dictionary_loader(loc_list)
             else:
@@ -206,9 +231,8 @@ class Phunspell:
                 self.dictionary = DICTIONARIES_LOADED[loc]
                 return
 
-            datadir = os.getenv("PICKLED_DATADIR")
-            if datadir:
-                filepath = os.path.join(datadir, loc)
+            if self.object_storage:
+                filepath = os.path.join(self.object_storage, loc)
             else:
                 filepath = os.path.join(TEMPDIR, loc)
 
@@ -225,17 +249,10 @@ class Phunspell:
     def dictionary_store(self, loc):
         """iterate locale dump dictionary to object
         pickle the dictionary
-
-        Can specify an Environement varible to
-        local dir to save/load pickled data to
-
-        linux/mac osx:
-        $ export PICKLED_DATADIR="/home/dwright/python/phunspell/pickled_data/"
         """
         try:
-            datadir = os.getenv("PICKLED_DATADIR")
-            if datadir:
-                filepath = os.path.join(datadir, loc)
+            if self.object_storage:
+                filepath = os.path.join(self.object_storage, loc)
             else:
                 filepath = os.path.join(TEMPDIR, loc)
 
@@ -401,7 +418,13 @@ class Phunspell:
 
 if __name__ == "__main__":
     # create pickled dictionaries for all dictionaries
-    # pspell = Phunspell(loc_lang="en_US", load_all=True)
+    # import tempfile
+    # TEMPDIR = tempfile.gettempdir()
+    # storage_path = "/var/folders/vd/n_l9hxb57msdcc_33myhkqmw0000gn/T"
+    storage_path = "/tmp/foo"
+
+    # run once:
+    # pspell = PhunspellObjectStore(path=storage_path)
     # import sys
     # sys.exit()
 
@@ -424,7 +447,7 @@ if __name__ == "__main__":
     }
 
     # 16.41s user 0.48s system 99% cpu 16.986 total
-    pspell = Phunspell()
+    pspell = Phunspell(object_storage=storage_path)
 
     for loc in dicts_words.keys():
         # 36.08s user 0.65s system 99% cpu 36.788 total

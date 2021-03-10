@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='phunspell',
-    version='0.1.4',
+    version='0.1.5',
     url='https://github.com/dvwright/phunspell',
     download_url='https://github.com/dvwright/phunspell/archive/v0.1.3.tar.gz',
     license='MIT',
