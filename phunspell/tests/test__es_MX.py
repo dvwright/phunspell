@@ -4,7 +4,7 @@ import unittest
 
 
 class TestES(unittest.TestCase):
-    pspell = phunspell.Phunspell('es')
+    pspell = phunspell.Phunspell('es_MX')
 
     def test_word_found(self):
         self.assertTrue(self.pspell.lookup("pianista"))
