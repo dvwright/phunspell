@@ -56,9 +56,9 @@ DICTIONARIES = {
     "bo": ["bo", "?"],
     "br_FR": ["br_FR", "Breton"],
     "bs_BA": ["bs_BA", "?"],
-    # ca_ES ? Catalan
-    "ca": ["ca", "?"],
-    "ca-valencia": ["ca", "?"],
+    # "ca-valencia": ["ca", "?"], # a dialect? used?
+    "ca": ["ca", "Catalan ?"],
+    "ca_ES": ["ca", "Catalan"],  # guessing that ca should be ca_ES
     "cs_CZ": ["cs_CZ", "Czech"],
     "da_DK": ["da_DK", "Danish"],
     "de_AT": ["de", "German"],
@@ -164,6 +164,7 @@ class PhunspellObjectStore:
         try:
             pspell = Phunspell(object_storage=path)
             pspell.dictionary_loader(pspell.dictionaries_all())
+            # pspell.dictionary_loader(['ca'])
         except (
             FileNotFoundError,
             KeyError,
@@ -219,7 +220,7 @@ class Phunspell:
             )
 
     def dictionaries_all(self):
-        """Load 'all' dictionaries"""
+        """Return included dictionary locales names"""
         return [n for n in DICTIONARIES.keys() if n.find('_') != -1]
 
     # TODO: debug
@@ -244,7 +245,7 @@ class Phunspell:
             # memoize
             DICTIONARIES_LOADED[loc] = stored_dic
         except (TypeError, OSError) as error:
-            raise PhunspellError(f'Cannot load dictionary: {error}')
+            raise PhunspellError("Cannot load dictionary {}".format(error))
 
     def dictionary_store(self, loc):
         """iterate locale dump dictionary to object
@@ -262,10 +263,11 @@ class Phunspell:
             data = Dictionary.from_files(self.dict_path)
             pickle.dump(data, pfile)
             pfile.close()
+
             # else:
-            #   raise PhunspellError(f'Cant create dictionay path {filepath}')
-        except (TypeError, OSError) as error:
-            raise PhunspellError(f'Cannot write file: {filepath} {error}')
+            #   raise PhunspellError('Cant create dictionay path')
+        except (KeyError, TypeError, OSError) as error:
+            raise PhunspellError("Cannot write file {}".format(error))
 
     def dictionary_loader(self, loc_list):
         """iterate locale list load dictionary for locale
@@ -336,7 +338,7 @@ class Phunspell:
 
         En based languages only!
 
-        TODO: punctuation in other languages
+        TODO: punctuation for other languages
         """
         try:
             if lcase:
