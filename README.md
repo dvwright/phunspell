@@ -165,6 +165,11 @@ As long as you keep that environmental variable set for all future runs just use
 
 ```python
 pspell = Phunspell()
+
+# load the specific locale on lookups
+pspell.lookup_list(['us-word1', 'us-word2'], locs='en_US')
+pspell.lookup('german-word', locs='de_DE')
+
 ```
 
 *NOTE: If you ever update dictionary data, you will need to create a new pickle store for it.*
