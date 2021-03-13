@@ -81,7 +81,7 @@ Guarani	                     | gug_PY
 Hebrew	                     | he_IL
 Hindi	                     | hi_IN
 Croatian	                 | hr_HR
-Hungarian	                 | hu_HU
+Hungarian	                 | hu_HU (*TODO*)
 Icelandic	                 | is
 Indonesian	                 | id_ID
 Italian	                     | it_IT

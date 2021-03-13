@@ -34,12 +34,12 @@ class TestMultiLoadNoCache(unittest.TestCase):
         for loc in dicts_words.keys():
             # slower performance
             pspell = phunspell.Phunspell(loc)
-            self.assertTrue(pspell.lookup(dicts_words[loc], locs=loc))
+            self.assertTrue(pspell.lookup(dicts_words[loc], loc=loc))
 
         for loc in dicts_words_cached.keys():
             # slower performance
             pspell = phunspell.Phunspell(loc)
-            self.assertTrue(pspell.lookup(dicts_words[loc], locs=loc))
+            self.assertTrue(pspell.lookup(dicts_words[loc], loc=loc))
 
 
 if __name__ == "__main__":

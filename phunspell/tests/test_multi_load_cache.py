@@ -27,10 +27,10 @@ class TestMultiLoadCache(unittest.TestCase):
 
     def test_multi_load_cache(self):
         for loc in dicts_words.keys():
-            self.assertTrue(self.pspell.lookup(dicts_words[loc], locs=loc))
+            self.assertTrue(self.pspell.lookup(dicts_words[loc], loc=loc))
 
         for loc in dicts_words_cached.keys():
-            self.assertTrue(self.pspell.lookup(dicts_words[loc], locs=loc))
+            self.assertTrue(self.pspell.lookup(dicts_words[loc], loc=loc))
 
 
 if __name__ == "__main__":

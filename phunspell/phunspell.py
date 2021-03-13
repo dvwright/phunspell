@@ -38,12 +38,7 @@
 import os
 import string
 import pickle
-import tempfile
-
-# import functools
 from spylls.hunspell import Dictionary
-
-TEMPDIR = tempfile.gettempdir()
 
 DICTIONARIES = {
     # lang-loc # dir   # language
@@ -141,7 +136,7 @@ DICTIONARIES = {
     # "hyph_zu_ZA" : ["zu_ZA",    "LANG"],
 }
 
-# memoize
+# memoize - only if using object_storage feature
 DICTIONARIES_LOADED = {}
 
 
@@ -164,7 +159,7 @@ class PhunspellObjectStore:
         try:
             pspell = Phunspell(object_storage=path)
             pspell.dictionary_loader(pspell.dictionaries_all())
-            # pspell.dictionary_loader(['ca'])
+            # pspell.dictionary_loader(['ca', 'ru_RU'])
         except (
             FileNotFoundError,
             KeyError,
@@ -200,14 +195,11 @@ class Phunspell:
                 # if locales passed, load specified dictionaries on init
                 self.dictionary_loader(loc_list)
             else:
-                # just load single loc dictionary on init
+                # load single loc dictionary on init
                 self.dict_dirpath(loc_lang)
 
-                # use local dictionaries only
+                # use local dictionaries
                 self.dictionary = Dictionary.from_files(self.dict_path)
-
-                # pass directly to spylls (could do for en_US)
-                # self.dictionary = Dictionary.from_files(loc_lang)
         except (
             FileNotFoundError,
             KeyError,
@@ -223,8 +215,6 @@ class Phunspell:
         """Return included dictionary locales names"""
         return [n for n in DICTIONARIES.keys() if n.find('_') != -1]
 
-    # TODO: debug
-    # @functools.lru_cache
     def dictionary_load(self, loc):
         """load stored dictionary object for locale"""
         try:
@@ -234,16 +224,22 @@ class Phunspell:
 
             if self.object_storage:
                 filepath = os.path.join(self.object_storage, loc)
+
+                if os.path.exists(filepath):
+                    pfile = open(filepath, 'rb')
+                    stored_dic = pickle.load(pfile)
+                    self.dictionary = stored_dic
+                    pfile.close()
+                    # memoize
+                    DICTIONARIES_LOADED[loc] = stored_dic
+                else:
+                    # not found it object_storage, create it
+                    self.dictionary_store(loc)
             else:
-                filepath = os.path.join(TEMPDIR, loc)
-
-            pfile = open(filepath, 'rb')
-            stored_dic = pickle.load(pfile)
-            self.dictionary = stored_dic
-            pfile.close()
-
-            # memoize
-            DICTIONARIES_LOADED[loc] = stored_dic
+                # not using object store
+                # open dist included dictionary directly
+                self.dict_dirpath(loc)
+                self.dictionary = Dictionary.from_files(self.dict_path)
         except (TypeError, OSError) as error:
             raise PhunspellError("Cannot load dictionary {}".format(error))
 
@@ -254,18 +250,20 @@ class Phunspell:
         try:
             if self.object_storage:
                 filepath = os.path.join(self.object_storage, loc)
-            else:
-                filepath = os.path.join(TEMPDIR, loc)
 
-            # if os.path.exists(filepath):
-            self.dict_dirpath(loc)
-            pfile = open(filepath, 'wb')
-            data = Dictionary.from_files(self.dict_path)
-            pickle.dump(data, pfile)
-            pfile.close()
+                self.dict_dirpath(loc)
+                # read dictionaries from distrubtion path
+                data = Dictionary.from_files(self.dict_path)
 
-            # else:
-            #   raise PhunspellError('Cant create dictionay path')
+                # open object_storage local path to dump object to
+                pfile = open(filepath, 'wb')
+                pickle.dump(data, pfile)
+                pfile.close()
+
+                self.dictionary = data
+
+                # memoize it
+                DICTIONARIES_LOADED[loc] = data
         except (KeyError, TypeError, OSError) as error:
             raise PhunspellError("Cannot write file {}".format(error))
 
@@ -336,9 +334,9 @@ class Phunspell:
 
         string.punctuation => !"#$%&'()*+, -./:;<=>?@[]^_`{|}~
 
-        En based languages only!
+        en_* based languages only?
 
-        TODO: punctuation for other languages
+        TODO: punctuation for other languages?
         """
         try:
             if lcase:
@@ -357,14 +355,14 @@ class Phunspell:
         except (FileNotFoundError, TypeError, ValueError) as error:
             raise PhunspellError("phunspell, to list failed {}".format(error))
 
-    def lookup(self, word, locs=[]):
+    def lookup(self, word, loc=None):
         """takes word (string)
         removes beginning and trailing whitespace
         returns true if found in dictionary, false otherwise
         """
         try:
-            if len(locs) > 0:
-                self.dictionary_load(locs)
+            if loc:
+                self.dictionary_load(loc)
 
             return self.dictionary.lookup(word.strip())
         except ValueError as error:
@@ -372,7 +370,7 @@ class Phunspell:
                 "phunspell, dictionary lookup failed {}".format(error)
             )
 
-    def lookup_list(self, wordlist, locs=[]):
+    def lookup_list(self, wordlist, loc=None):
         """takes list of words, returns list words not found
         in dictionary
 
@@ -380,8 +378,8 @@ class Phunspell:
         Out: ["programing"]
         """
         try:
-            if len(locs) > 0:
-                self.dictionary_load(locs)
+            if loc:
+                self.dictionary_load(loc)
 
             flagged = []
             for word in wordlist:
@@ -393,15 +391,15 @@ class Phunspell:
                 "phunspell, dictionary lookup_list failed {}".format(error)
             )
 
-    def suggest(self, word, locs=[]):
+    def suggest(self, word, loc=None):
         """takes word (string)
         removes beginning and trailing whitespace
         returns suggested spelling if not found in dictionary
         returns nothing if found in dictionary
         """
         try:
-            if len(locs) > 0:
-                self.dictionary_load(locs)
+            if loc:
+                self.dictionary_load(loc)
 
             return self.dictionary.suggest(word.strip())
         except ValueError as error:
@@ -419,6 +417,34 @@ class Phunspell:
 
 
 if __name__ == "__main__":
+    import sys
+
+    # TEST - local object expected but not exist,
+    # will be read from dictionary and dumped to local storage
+    # so it's there next time
+    # NOTE: feature is ONLY if user set storage_path is set
+    # pspell = Phunspell(object_storage="/tmp/d")
+    # # should load default en_US dictionary
+    # print(pspell.lookup("phunspell"))  # False
+    # print(pspell.lookup("about"))  # True
+
+    # # load russian dictionary - should create a dump file in /tmp/d
+    # print(pspell.lookup("phunspell", loc='ru_RU'))  # False
+    # print(pspell.lookup("about", loc='ru_RU'))  # False
+
+    # sys.exit()
+
+    pspell = Phunspell()
+    # should load default en_US dictionary
+    print(pspell.lookup("phunspell"))  # False
+    print(pspell.lookup("about"))  # True
+
+    # load russian dictionary - should NOTE create a dump file in /tmp/d
+    print(pspell.lookup("phunspell", loc='ru_RU'))  # False
+    print(pspell.lookup("about", loc='ru_RU'))  # False
+
+    sys.exit()
+
     # create pickled dictionaries for all dictionaries
     # import tempfile
     # TEMPDIR = tempfile.gettempdir()
@@ -454,12 +480,12 @@ if __name__ == "__main__":
     for loc in dicts_words.keys():
         # 36.08s user 0.65s system 99% cpu 36.788 total
         # pspell = Phunspell(loc)
-        print(pspell.lookup(dicts_words[loc], locs=loc))
+        print(pspell.lookup(dicts_words[loc], loc=loc))
 
     for loc in dicts_words_cached.keys():
         # 36.08s user 0.65s system 99% cpu 36.788 total
         # pspell = Phunspell(loc)
-        print(pspell.lookup(dicts_words[loc], locs=loc))
+        print(pspell.lookup(dicts_words[loc], loc=loc))
 
     # import sys
     # sys.exit()
