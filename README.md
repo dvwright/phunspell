@@ -183,7 +183,7 @@ $ du -sh .
 1.4G
 ```
 
-For all future uses of the library just pass the directory as an argument, it should find the dictionaries and load them 'quickly'. (about 2x faster than without an objhect store).
+For all future uses of the library just pass the directory as an argument, it should find the dictionaries and load them 'quickly'. (about 2x faster than without an object store).
 
 ```python
 storage_path = "/home/dvwright/data/phunspell/dictionary_objects"
