@@ -140,7 +140,7 @@ python -m unittest discover -s phunspell/tests -p "test_*.py"
     }
 
     for loc in dicts_words.keys():
-        print(pspell.lookup(dicts_words[loc], locs=loc))
+        print(pspell.lookup(dicts_words[loc], loc=loc))
 ```
 
 There is an option to build/store all the dictionaries as pickled data. Since there are security risks associated with pickled data we will not include that data in the distrubution.
@@ -190,8 +190,8 @@ storage_path = "/home/dvwright/data/phunspell/dictionary_objects"
 pspell = Phunspell(object_storage=storage_path)
 
 # load the specific locale on lookups
-pspell.lookup_list(['us-word1', 'us-word2'], locs='en_US')
-pspell.lookup('german-word', locs='de_DE')
+pspell.lookup_list(['us-word1', 'us-word2'], loc='en_US')
+pspell.lookup('german-word', loc='de_DE')
 
 ```
 
