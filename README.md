@@ -183,7 +183,7 @@ $ du -sh .
 1.4G
 ```
 
-For all future uses of the library just pass the directory as an argument.
+For all future uses of the library just pass the directory as an argument, it should find the dictionaries and load them 'quickly'. (about 2x faster than without an objhect store).
 
 ```python
 storage_path = "/home/dvwright/data/phunspell/dictionary_objects"
@@ -196,8 +196,6 @@ pspell.lookup('german-word', loc='de_DE')
 ```
 
 *NOTE: If you ever update dictionary data, you will need to create a new pickle store for it.*
-
-and it should find the dictionaries and load them quickly
 
 
 #### Misc
