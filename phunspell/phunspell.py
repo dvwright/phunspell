@@ -337,6 +337,13 @@ class Phunspell:
         en_* based languages only?
 
         TODO: punctuation for other languages?
+
+        TODO:
+            remove non-breaking unicode char from string: \xa0
+        "The New\xa0Movie" => ['The', 'New\xa0Movie']
+
+        i.e. update to: "NFKD"?
+        return [unicodedata.normalize("NFKC", x.strip()) for x in words if len(x) and x not in ["'", '-']] # noqa E501
         """
         try:
             if lcase:
