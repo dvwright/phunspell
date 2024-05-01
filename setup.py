@@ -1,5 +1,5 @@
 from setuptools import setup
-from setuptools import find_packages
+from setuptools import find_namespace_packages
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -16,7 +16,7 @@ setup(
     author='David Wright',
     author_email='dvwright@cpan.org',
     include_package_data=True,
-    packages=find_packages(
+    packages=find_namespace_packages(
         exclude=[
             'tests',
             'pyproject.toml',
